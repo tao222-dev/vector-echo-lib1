@@ -475,7 +475,7 @@ const loadArtists=()=>{
     let l=JSON.parse(localStorage.getItem(ART_KEY)||'[]');
     if(!Array.isArray(l)) l=[];
     let migrated=false;
-    l.forEach(a=>{if(!a || typeof a!=='object')return;if(!Array.isArray(a.imgs)){a.imgs=[];migrated=true}});
+    l.forEach(a=>{if(!a || typeof a!=='object')return;if(Array.isArray(a.imgs)){const before=a.imgs.length;a.imgs=a.imgs.filter(s=>typeof s==='string'&&s.indexOf('data:image')===0&&s.length>200);if(a.imgs.length!==before)migrated=true}else{a.imgs=[];migrated=true}});
     // 迁移旧独立图库 ovoArtGallery -> 作为"未分类图集"画师串
     try{
       const gal=JSON.parse(localStorage.getItem('ovoArtGallery')||'[]');
@@ -494,7 +494,7 @@ let artistImgs=[];
 function renderArtistImgsPreview(){
   const box=$('artistImgsPreview');box.innerHTML='';
   if(!artistImgs.length)return;
-  box.innerHTML=artistImgs.map((src,i)=>`<div class="ag"><button class="ag-x" data-idx="${i}" title="移除">✕</button><img src="${src}"></div>`).join('');
+  box.innerHTML=artistImgs.map((src,i)=>`<div class="ag"><button class="ag-x" data-idx="${i}" title="移除">✕</button><img src="${src}" onerror="this.style.display='none'"></div>`).join('');
   box.querySelectorAll('.ag-x').forEach(b=>b.onclick=()=>{artistImgs.splice(+b.dataset.idx,1);renderArtistImgsPreview()});
 }
 function renderArtists(){
@@ -505,7 +505,7 @@ function renderArtists(){
   if(!list.length){box.innerHTML='<div class="lib-empty">'+(q?'没有匹配的画师串':'还没有保存的画师串<br>在上方「新建画师串」里添加吧')+'</div>';return;}
   list.forEach(([a,idx])=>{
     const d=document.createElement('div');d.className='mi';
-    const imgHtml = (a.imgs && a.imgs.length) ? `<div class="art-gallery mi-imgs">${a.imgs.map((src)=>`<div class="ag"><button class="ag-x" data-del-img title="删除">✕</button><img src="${src}"><div class="ag-acts"><button class="btn sm" data-copy-img>复制</button><button class="btn sm" data-use-img>参考</button></div></div>`).join('')}</div>` : '';
+    const imgHtml = (a.imgs && a.imgs.length) ? `<div class="art-gallery mi-imgs">${a.imgs.map((src)=>`<div class="ag"><button class="ag-x" data-del-img title="删除">✕</button><img src="${src}" onerror="this.style.display='none'"><div class="ag-acts"><button class="btn sm" data-copy-img>复制</button><button class="btn sm" data-use-img>参考</button></div></div>`).join('')}</div>` : '';
     d.innerHTML=`<div class="mi-top"><span class="mi-name" data-name title="点击改名">${esc(a.name)}</span><button class="x" data-del title="删除整条">✕</button></div>
       <div class="mi-text">${esc(a.text)}</div>
       ${imgHtml}
