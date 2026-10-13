@@ -380,7 +380,7 @@ body{overflow-x:hidden}
           <div class="ag-sec">配图（可选，可多张）</div>
           <div class="drop" id="artistImgsDrop">点击或拖拽上传图片</div>
           <div id="artistImgsPreview" class="art-gallery mi-imgs"></div>
-          <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「插入」追加到本页正向提示词。</div>
+          <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「插入」放到本页正向提示词最上方（下方空一行）。</div>
           <button class="btn sm" id="addArtist" style="margin-top:10px;width:100%">保存画师串</button>
         </div>
         <div id="artistList" style="margin-top:14px"></div>
@@ -509,7 +509,7 @@ function renderArtists(){
       ${imgHtml}
       <div class="mi-acts"><button class="btn sm" data-copy>复制</button><button class="btn sm" data-ins>插入提示词</button></div>`;
     d.querySelector('[data-copy]').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(a.text);toast('已复制：'+a.name)};
-    d.querySelector('[data-ins]').onclick=()=>{const ta=$('prompt');const v=ta.value.trim();ta.value=(v? v+', ':'')+a.text.trim();ta.dispatchEvent(new Event('input'));toast('已插入：'+a.name)};
+    d.querySelector('[data-ins]').onclick=()=>{const ta=$('prompt');const v=ta.value.trim();const t=a.text.trim();ta.value=v? (t+'\n\n'+v) : t;ta.dispatchEvent(new Event('input'));ta.focus();toast('已插入到顶部：'+a.name)};
     d.querySelector('[data-del]').onclick=()=>{const l=loadArtists();l.splice(idx,1);saveArtists(l);renderArtists()};
     // 改名
     const nameEl=d.querySelector('[data-name]');
