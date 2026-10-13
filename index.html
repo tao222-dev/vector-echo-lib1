@@ -632,22 +632,26 @@ document.querySelectorAll('#lib .tab').forEach(t=>t.onclick=()=>{document.queryS
   }
   /* 缩放 */
   let rz=false, sx=0, sy=0, sw=0, sh=0;
-  function rzStart(e){ if(e.button&&e.button!==0)return; rz=true; const r=anchor(); const c=client(e); sx=c.x;sy=c.y;sw=r.width;sh=r.height; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
+  function rzStart(e){ if(e.button&&e.button!==0)return; rz=true; document.body.style.overflow='hidden'; const r=anchor(); const c=client(e); sx=c.x;sy=c.y;sw=r.width;sh=r.height; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
   function rzMove(e){ if(!rz)return; const c=client(e); const dx=c.x-sx,dy=c.y-sy; const vw=innerWidth,vh=innerHeight,minW=280,minH=240; win.style.width=Math.max(minW,Math.min(vw-16,sw+dx))+'px'; win.style.height=Math.max(minH,Math.min(vh-16,sh+dy))+'px'; e.preventDefault();}
-  function rzEnd(){rz=false}
+  function rzEnd(){rz=false; document.body.style.overflow=''}
   /* 拖动（标题栏） */
   let mv=false, mx=0, my=0, ml=0, mt=0;
-  function mvStart(e){ if(e.target.closest('.lib-x'))return; if(e.button&&e.button!==0)return; const r=anchor(); const c=client(e); mx=c.x;my=c.y;ml=r.left;mt=r.top; mv=true; win.classList.add('dragging'); e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
+  function mvStart(e){ if(e.target.closest('.lib-x'))return; if(e.button&&e.button!==0)return; const r=anchor(); const c=client(e); mx=c.x;my=c.y;ml=r.left;mt=r.top; mv=true; win.classList.add('dragging'); document.body.style.overflow='hidden'; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
   function mvMove(e){ if(!mv)return; const c=client(e); let nx=ml+(c.x-mx), ny=mt+(c.y-my); const vw=innerWidth,vh=innerHeight,w=win.offsetWidth,h=win.offsetHeight; nx=Math.max(-w+48,Math.min(vw-48,nx)); ny=Math.max(0,Math.min(vh-48,ny)); win.style.left=nx+'px'; win.style.top=ny+'px'; e.preventDefault();}
-  function mvEnd(){mv=false; win.classList.remove('dragging')}
-  if(usePE){
+  function mvEnd(){mv=false; win.classList.remove('dragging'); document.body.style.overflow=''}
+  /* 优先使用触摸事件（移动端更可靠），其次 Pointer，最后鼠标 */
+  const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+  if(isTouch){
+    const ts=rzStart,tm=rzMove,te=rzEnd;
+    handle.addEventListener('touchstart',ts,{passive:false}); window.addEventListener('touchmove',tm,{passive:false}); window.addEventListener('touchend',te); window.addEventListener('touchcancel',te);
+    head.addEventListener('touchstart',mvStart,{passive:false}); window.addEventListener('touchmove',mvMove,{passive:false}); window.addEventListener('touchend',mvEnd); window.addEventListener('touchcancel',mvEnd);
+  }else if(usePE){
     handle.addEventListener('pointerdown',rzStart); window.addEventListener('pointermove',rzMove); window.addEventListener('pointerup',rzEnd); window.addEventListener('pointercancel',rzEnd);
     head.addEventListener('pointerdown',mvStart); window.addEventListener('pointermove',mvMove); window.addEventListener('pointerup',mvEnd); window.addEventListener('pointercancel',mvEnd);
   }else{
     handle.addEventListener('mousedown',rzStart); window.addEventListener('mousemove',rzMove); window.addEventListener('mouseup',rzEnd);
-    handle.addEventListener('touchstart',rzStart,{passive:false}); window.addEventListener('touchmove',rzMove,{passive:false}); window.addEventListener('touchend',rzEnd); window.addEventListener('touchcancel',rzEnd);
     head.addEventListener('mousedown',mvStart); window.addEventListener('mousemove',mvMove); window.addEventListener('mouseup',mvEnd);
-    head.addEventListener('touchstart',mvStart,{passive:false}); window.addEventListener('touchmove',mvMove,{passive:false}); window.addEventListener('touchend',mvEnd); window.addEventListener('touchcancel',mvEnd);
   }
 })();
 
