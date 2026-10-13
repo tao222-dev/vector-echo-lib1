@@ -489,7 +489,7 @@ const loadArtists=()=>{
     return l;
   }catch(e){return[]}
 };
-const saveArtists=l=>localStorage.setItem(ART_KEY,JSON.stringify(l));
+const saveArtists=l=>{try{localStorage.setItem(ART_KEY,JSON.stringify(l))}catch(e){toast('保存失败：本地存储空间不足，请删掉一些配图后再试')}};
 let artistImgs=[];
 function renderArtistImgsPreview(){
   const box=$('artistImgsPreview');box.innerHTML='';
@@ -542,7 +542,7 @@ bindDrop('artistImgsDrop',async d=>{const s=await shrink(d,512);artistImgs.push(
 const REF_KEY='ovoRefs';
 const loadRefs=()=>{try{return JSON.parse(localStorage.getItem(REF_KEY)||'[]')}catch(e){return[]}};
 const saveRefs=l=>localStorage.setItem(REF_KEY,JSON.stringify(l));
-function shrink(src,max){return new Promise(r=>{const im=new Image();im.onload=()=>{let{w,h}=im;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);r(c.toDataURL('image/png'))};im.onerror=()=>r(src);im.src=src})}
+function shrink(src,max){return new Promise(r=>{const im=new Image();im.onload=()=>{let{w,h}=im;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);try{r(c.toDataURL('image/jpeg',0.85))}catch(e){r(c.toDataURL('image/png'))}};im.onerror=()=>r(src);im.src=src})}
 function renderRefs(){
   const box=$('refList');box.innerHTML='';
   const list=loadRefs();
@@ -562,12 +562,13 @@ function renderRefs(){
 async function copyImage(src){
   try{
     if(navigator.clipboard&&window.ClipboardItem){
+      const mime=(src.match(/data:([^;]+)/)||[])[1]||'image/png';
       const blob=await (await fetch(src)).blob();
-      await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+      await navigator.clipboard.write([new ClipboardItem({[mime]:blob})]);
       return toast('图片已复制，去别处粘贴即可');
     }
     throw new Error('no clipboard');
-  }catch(e){const a=document.createElement('a');a.href=src;a.download='ref.png';a.click();toast('浏览器不支持复制图片，已改为下载')}
+  }catch(e){const a=document.createElement('a');a.href=src;a.download='ref.'+(src.includes('image/png')?'png':'jpg');a.click();toast('浏览器不支持复制图片，已改为下载')}
 }
 bindDrop('refDrop',async d=>{const s=await shrink(d,512);const l=loadRefs();l.push({name:'参考图'+(l.length+1),src:s});saveRefs(l);renderRefs();toast('已存入参考图库')},true);
 
