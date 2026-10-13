@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>OVONovelAI生图</title>
 <meta name="theme-color" content="#f6dbe3">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +17,7 @@
   --line:#ecd3da;--win:#f4e6ea;--title:linear-gradient(180deg,#f7dfe6,#eec4d0);--shadow:0 6px 24px rgba(201,121,143,.15);
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
+html,body{margin:0;min-height:100%;min-height:100dvh;overscroll-behavior:none}
 body{font-family:"Zen Maru Gothic",system-ui,sans-serif;color:var(--ink);font-size:14px;
   background:var(--bg) radial-gradient(circle,#f3d6de 1.2px,transparent 1.4px) 0 0/18px 18px;}
 .ribbon{height:22px;background:repeating-linear-gradient(90deg,transparent 0 14px,var(--pink) 14px 16px,transparent 16px 30px),linear-gradient(#fff,#fbe9ee);border-bottom:1px dashed var(--pink2)}
@@ -92,7 +92,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 /* 遮罩已移除：素材库改为浮动窗口，不再拦截主页面交互，可边用边开 */
 #lib{position:fixed;inset:0;z-index:71;display:flex;align-items:center;justify-content:center;background:transparent;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s;pointer-events:none}
 #lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible}
-.lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86vh);min-width:300px;min-height:260px;max-width:98vw;max-height:96vh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:2.5px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.30),0 0 0 1px rgba(201,121,143,.25);display:flex;flex-direction:column;align-items:center;overflow:hidden;pointer-events:auto}
+.lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86dvh);min-width:300px;min-height:260px;max-width:98vw;max-height:96dvh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:2.5px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.30),0 0 0 1px rgba(201,121,143,.25);display:flex;flex-direction:column;align-items:center;overflow:hidden;pointer-events:auto}
 .lib-win.dragging{cursor:move;user-select:none;touch-action:none}
 .lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box;cursor:move;user-select:none;touch-action:none}
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -100,7 +100,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
 .lib-resize{position:absolute;right:3px;bottom:3px;width:22px;height:22px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:5px;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 34%,var(--rose) 34% 44%,transparent 44% 56%,var(--rose) 56% 66%,transparent 66% 78%,var(--rose) 78% 88%,transparent 88%)}
 .lib-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
-.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box}
+.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box;overscroll-behavior:contain}
 .lib-body::-webkit-scrollbar{width:8px}
 .lib-body::-webkit-scrollbar-thumb{background:#f0cdd8;border-radius:8px}
 #lib .tabs{display:flex;gap:4px;margin:6px 0 16px;width:min(94%,760px);box-sizing:border-box;background:#fff;padding:5px;border-radius:24px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(201,121,143,.10)}
@@ -143,7 +143,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 /* 响应式：缩放不崩坏 */
 body{overflow-x:hidden}
 @media(max-width:600px){
-  .lib-win{width:94vw;height:min(640px,84vh);border-radius:12px}
+  .lib-win{width:94vw;height:min(640px,84dvh);border-radius:12px}
   .lib-head{padding:16px 12px 8px}
   .lib-head b{font-size:24px}
   .lib-body{padding:4px 10px 20px}
