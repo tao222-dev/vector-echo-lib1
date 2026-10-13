@@ -91,16 +91,18 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 @keyframes fabpulse{0%,100%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 0 rgba(231,155,178,.45)}50%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 12px rgba(231,155,178,0)}}
 #libMask{position:fixed;inset:0;background:rgba(90,60,70,.30);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;z-index:70}
 #libMask.on{opacity:1;visibility:visible}
-#lib{position:fixed;inset:0;width:100%;height:100%;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);z-index:71;display:flex;flex-direction:column;align-items:center;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s}
+#lib{position:fixed;top:2.5vh;left:2.5vw;width:95vw;height:95vh;max-width:97vw;max-height:97vh;min-width:340px;min-height:260px;resize:both;overflow:hidden;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);z-index:71;display:flex;flex-direction:column;align-items:center;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s}
 #lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible}
-.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(92vw,760px)}
+.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box}
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:5px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
-.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(92vw,760px);max-width:100%}
+.lib-resize{position:absolute;right:3px;bottom:3px;width:22px;height:22px;pointer-events:none;opacity:.7;background:linear-gradient(135deg,transparent 0 40%,var(--rose) 40% 48%,transparent 48% 56%,var(--rose) 56% 64%,transparent 64% 72%,var(--rose) 72% 80%,transparent 80%)}
+.lib-tip{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
+.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box}
 .lib-body::-webkit-scrollbar{width:8px}
 .lib-body::-webkit-scrollbar-thumb{background:#f0cdd8;border-radius:8px}
-#lib .tabs{display:flex;gap:4px;margin:6px 0 16px;width:min(92vw,760px);background:#fff;padding:5px;border-radius:24px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(201,121,143,.10)}
+#lib .tabs{display:flex;gap:4px;margin:6px 0 16px;width:min(94%,760px);box-sizing:border-box;background:#fff;padding:5px;border-radius:24px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(201,121,143,.10)}
 #lib .tab{flex:1;text-align:center;padding:8px 6px;border-radius:18px;cursor:pointer;font-size:13px;background:transparent;color:var(--ink2);font-weight:700;transition:.18s}
 #lib .tab:hover{background:#fde3ea;color:var(--rose)}
 #lib .tab.on{background:linear-gradient(135deg,#f6c6d3,#e8a0b4);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(201,121,143,.35)}
@@ -118,7 +120,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 .refimg{width:100%;border-radius:8px;margin-top:2px;border:1px solid var(--line);display:block}
 .lib-empty{text-align:center;color:var(--ink2);font-family:"Cormorant Garamond",serif;font-size:14px;padding:24px 8px;line-height:1.6}
 /* 画师串新建卡片 + 配图（并入画师串） */
-.new-artist-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 4px 14px rgba(201,121,143,.08);position:relative;overflow:hidden}
+.new-artist-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:24px;box-shadow:0 4px 14px rgba(201,121,143,.08);position:relative;overflow:hidden}
 .new-artist-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f6c6d3,#e8a0b4)}
 .new-artist-title{font-weight:700;color:var(--rose);font-size:15px;text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--line);display:flex;align-items:center;justify-content:center;gap:6px}
 .ag-sec{font-weight:700;color:var(--rose);margin:14px 0 8px;font-size:13px;display:flex;align-items:center;gap:6px}
@@ -357,10 +359,10 @@ body{overflow-x:hidden}
 
 <input type="file" id="fileIn" accept="image/*" hidden>
 
-<div id="fab" title="素材库（画师串 / 参考图）">✦</div>
+<div id="fab" title="素材库（画师串 / 参考图 / 角色）">+</div>
 <div id="libMask"></div>
 <div id="lib">
-  <div class="lib-head"><b>♡ 素材库</b><button class="lib-x" id="libClose">✕</button></div>
+  <div class="lib-head"><b>素材库</b><button class="lib-x" id="libClose">关闭</button></div>
   <div class="tabs lib-seg" id="libTabs">
     <div class="tab on" data-l="libArt">画师串</div>
     <div class="tab" data-l="libRef">参考图</div>
@@ -368,17 +370,17 @@ body{overflow-x:hidden}
   </div>
   <div class="lib-body">
     <div class="pane on" id="libArt">
-      <input id="artistFilter" placeholder="🔍 搜索画师串">
+      <input id="artistFilter" placeholder="搜索画师串">
       <div class="new-artist-card">
-        <div class="new-artist-title">✎ 新建画师串</div>
+        <div class="new-artist-title">新建画师串</div>
         <input id="artistName" placeholder="名称（如 唯美风 / 某画师）">
         <label style="margin-top:8px">画师串内容</label>
         <textarea id="artistText" rows="3" placeholder="如 by xxx, style of yyy, masterpiece, ..."></textarea>
-        <div class="ag-sec">🖼 配图（可选，可多张）</div>
+        <div class="ag-sec">配图（可选，可多张）</div>
         <div class="drop" id="artistImgsDrop">点击或拖拽上传图片</div>
         <div id="artistImgsPreview" class="art-gallery mi-imgs"></div>
         <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「插入」追加到本页正向提示词。</div>
-        <button class="btn sm" id="addArtist" style="margin-top:10px;width:100%">＋ 保存画师串</button>
+        <button class="btn sm" id="addArtist" style="margin-top:10px;width:100%">保存画师串</button>
       </div>
       <div id="artistList" style="margin-top:14px"></div>
     </div>
@@ -389,7 +391,7 @@ body{overflow-x:hidden}
     </div>
     <div class="pane" id="libChar">
       <div class="new-artist-card">
-        <div class="new-artist-title">✎ 新建角色</div>
+        <div class="new-artist-title">新建角色</div>
         <input id="charName" placeholder="角色名称（如 主角 / 某角色）">
         <label style="margin-top:8px">角色正向提示词</label>
         <textarea id="charPrompt" rows="3" placeholder="如 (character_name:1.0), silver hair, blue eyes, ..."></textarea>
@@ -400,11 +402,13 @@ body{overflow-x:hidden}
           <div><label>Y 位置 (0~1)</label><input id="charY" type="number" step="0.1" min="0" max="1" value="0.5"></div>
         </div>
         <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「应用到角色区」载入本页左侧角色列表（最多6个）。</div>
-        <button class="btn sm" id="addCharLib" style="margin-top:10px;width:100%">＋ 保存角色</button>
+        <button class="btn sm" id="addCharLib" style="margin-top:10px;width:100%">保存角色</button>
       </div>
       <div id="charList" style="margin-top:14px"></div>
     </div>
   </div>
+  <div class="lib-resize" title="拖动此处缩放窗口"></div>
+  <div class="lib-tip">拖动右下角可缩放</div>
 </div>
 
 <script>
@@ -495,7 +499,7 @@ function renderArtists(){
   const q=($('artistFilter').value||'').trim().toLowerCase();
   const all=loadArtists();
   const list=all.map((a,i)=>[a,i]).filter(([a])=>((a.name||'')+' '+(a.text||'')).toLowerCase().includes(q));
-  if(!list.length){box.innerHTML='<div class="lib-empty">'+(q?'没有匹配的画师串 ♡':'还没有保存的画师串<br>在上方「新建画师串」里添加吧 ♡')+'</div>';return;}
+  if(!list.length){box.innerHTML='<div class="lib-empty">'+(q?'没有匹配的画师串':'还没有保存的画师串<br>在上方「新建画师串」里添加吧')+'</div>';return;}
   list.forEach(([a,idx])=>{
     const d=document.createElement('div');d.className='mi';
     const imgHtml = (a.imgs && a.imgs.length) ? `<div class="art-gallery mi-imgs">${a.imgs.map((src)=>`<div class="ag"><button class="ag-x" data-del-img title="删除">✕</button><img src="${src}"><div class="ag-acts"><button class="btn sm" data-copy-img>复制</button><button class="btn sm" data-use-img>参考</button></div></div>`).join('')}</div>` : '';
@@ -503,8 +507,8 @@ function renderArtists(){
       <div class="mi-text">${esc(a.text)}</div>
       ${imgHtml}
       <div class="mi-acts"><button class="btn sm" data-copy>复制</button><button class="btn sm" data-ins>插入提示词</button></div>`;
-    d.querySelector('[data-copy]').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(a.text);toast('已复制：'+a.name+' ♡')};
-    d.querySelector('[data-ins]').onclick=()=>{const ta=$('prompt');const v=ta.value.trim();ta.value=(v? v+', ':'')+a.text.trim();ta.dispatchEvent(new Event('input'));toast('已插入：'+a.name+' ♡')};
+    d.querySelector('[data-copy]').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(a.text);toast('已复制：'+a.name)};
+    d.querySelector('[data-ins]').onclick=()=>{const ta=$('prompt');const v=ta.value.trim();ta.value=(v? v+', ':'')+a.text.trim();ta.dispatchEvent(new Event('input'));toast('已插入：'+a.name)};
     d.querySelector('[data-del]').onclick=()=>{const l=loadArtists();l.splice(idx,1);saveArtists(l);renderArtists()};
     // 改名
     const nameEl=d.querySelector('[data-name]');
@@ -526,10 +530,10 @@ $('addArtist').onclick=()=>{
   const name=$('artistName').value.trim();const text=$('artistText').value.trim();
   if(!text && !artistImgs.length)return toast('请填写画师串内容或上传配图');
   const l=loadArtists();l.push({name:name||('画师串'+(l.length+1)),text,imgs:artistImgs.slice()});saveArtists(l);
-  $('artistName').value='';$('artistText').value='';artistImgs=[];renderArtistImgsPreview();renderArtists();toast('已保存 ♡');
+  $('artistName').value='';$('artistText').value='';artistImgs=[];renderArtistImgsPreview();renderArtists();toast('已保存');
 };
 $('artistFilter').addEventListener('input',renderArtists);
-bindDrop('artistImgsDrop',async d=>{const s=await shrink(d,512);artistImgs.push(s);renderArtistImgsPreview();toast('已添加配图 ♡')},true);
+bindDrop('artistImgsDrop',async d=>{const s=await shrink(d,512);artistImgs.push(s);renderArtistImgsPreview();toast('已添加配图')},true);
 
 /* ---------- reference image library (参考图库) ---------- */
 const REF_KEY='ovoRefs';
@@ -539,7 +543,7 @@ function shrink(src,max){return new Promise(r=>{const im=new Image();im.onload=(
 function renderRefs(){
   const box=$('refList');box.innerHTML='';
   const list=loadRefs();
-  if(!list.length){box.innerHTML='<div class="lib-empty">还没有参考图 ♡<br>上传后存到这里<br>随时复制或用作生图参考</div>';return;}
+  if(!list.length){box.innerHTML='<div class="lib-empty">还没有参考图<br>上传后存到这里<br>随时复制或用作生图参考</div>';return;}
   list.forEach((rf,i)=>{
     const d=document.createElement('div');d.className='mi';
     d.innerHTML=`<div class="mi-top"><span class="mi-name">${esc(rf.name)}</span><button class="x" data-del title="删除">✕</button></div>
@@ -557,12 +561,12 @@ async function copyImage(src){
     if(navigator.clipboard&&window.ClipboardItem){
       const blob=await (await fetch(src)).blob();
       await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-      return toast('图片已复制，去别处粘贴即可 ♡');
+      return toast('图片已复制，去别处粘贴即可');
     }
     throw new Error('no clipboard');
   }catch(e){const a=document.createElement('a');a.href=src;a.download='ref.png';a.click();toast('浏览器不支持复制图片，已改为下载')}
 }
-bindDrop('refDrop',async d=>{const s=await shrink(d,512);const l=loadRefs();l.push({name:'参考图'+(l.length+1),src:s});saveRefs(l);renderRefs();toast('已存入参考图库 ♡')},true);
+bindDrop('refDrop',async d=>{const s=await shrink(d,512);const l=loadRefs();l.push({name:'参考图'+(l.length+1),src:s});saveRefs(l);renderRefs();toast('已存入参考图库')},true);
 
 /* ---------- character presets (角色预设) ---------- */
 const CHAR_KEY='ovoCharPresets';
@@ -571,17 +575,17 @@ const saveCharPresets=l=>localStorage.setItem(CHAR_KEY,JSON.stringify(l));
 function renderCharPresets(){
   const box=$('charList');box.innerHTML='';
   const list=loadCharPresets();
-  if(!list.length){box.innerHTML='<div class="lib-empty">还没有保存的角色 ♡<br>在上方「新建角色」里添加吧 ♡</div>';return;}
+  if(!list.length){box.innerHTML='<div class="lib-empty">还没有保存的角色<br>在上方「新建角色」里添加吧</div>';return;}
   list.forEach((c,i)=>{
     const d=document.createElement('div');d.className='mi';
     d.innerHTML=`<div class="mi-top"><span class="mi-name" data-name title="点击改名">${esc(c.name)}</span><button class="x" data-del title="删除">✕</button></div>
       <div class="mi-text">${esc(c.p)}</div>
       ${c.n?`<div class="mi-text" style="color:var(--rose);opacity:.85;margin-top:4px"><span style="opacity:.7">— 反向 —</span><br>${esc(c.n)}</div>`:''}
       <div class="mi-acts"><button class="btn sm" data-copy>复制</button><button class="btn sm" data-apply>应用到角色区</button></div>`;
-    d.querySelector('[data-copy]').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(c.p);toast('已复制：'+c.name+' ♡')};
+    d.querySelector('[data-copy]').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(c.p);toast('已复制：'+c.name)};
     d.querySelector('[data-apply]').onclick=()=>{
       if(chars.length>=6)return toast('本页角色已满（最多6个）');
-      chars.push({p:c.p||'',n:c.n||'',x:c.x??0.5,y:c.y??0.5});renderChars();saveCfg();toast('已应用到角色区：'+c.name+' ♡');
+      chars.push({p:c.p||'',n:c.n||'',x:c.x??0.5,y:c.y??0.5});renderChars();saveCfg();toast('已应用到角色区：'+c.name);
     };
     d.querySelector('[data-del]').onclick=()=>{const l=loadCharPresets();l.splice(i,1);saveCharPresets(l);renderCharPresets()};
     const nameEl=d.querySelector('[data-name]');
@@ -600,7 +604,7 @@ $('addCharLib').onclick=()=>{
   if(!p)return toast('请填写角色正向提示词');
   const clamp=v=>Math.min(1,Math.max(0,isNaN(+v)?0.5:+v));
   const l=loadCharPresets();l.push({name:name||('角色'+(l.length+1)),p,n,x:clamp($('charX').value),y:clamp($('charY').value)});saveCharPresets(l);
-  $('charName').value='';$('charPrompt').value='';$('charNeg').value='';renderCharPresets();toast('已保存 ♡');
+  $('charName').value='';$('charPrompt').value='';$('charNeg').value='';renderCharPresets();toast('已保存');
 };
 
 
