@@ -97,7 +97,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:400;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lib-x{margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
-.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;width:min(92vw,760px)}
+.lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(92vw,760px);max-width:100%}
 .lib-body::-webkit-scrollbar{width:8px}
 .lib-body::-webkit-scrollbar-thumb{background:#f0cdd8;border-radius:8px}
 #lib .tabs{display:flex;gap:8px;margin:4px 0 14px;width:min(92vw,760px)}
@@ -117,6 +117,41 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 .mi-acts .btn{font-size:12px;padding:5px 10px}
 .refimg{width:100%;border-radius:8px;margin-top:2px;border:1px solid var(--line);display:block}
 .lib-empty{text-align:center;color:var(--ink2);font-family:"Cormorant Garamond",serif;font-size:14px;padding:24px 8px;line-height:1.6}
+/* 画师串图集（可上传图片 + 随时改名） */
+.ag-sec{font-weight:700;color:var(--rose);margin:18px 0 6px;border-top:1px dashed var(--line);padding-top:14px;font-size:13px}
+.art-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.art-gallery .ag{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px;box-shadow:0 3px 10px rgba(201,121,143,.10);transition:transform .15s,box-shadow .15s}
+.art-gallery .ag:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(201,121,143,.18)}
+.art-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;display:block}
+.art-gallery .ag-n{font-size:11px;color:var(--rose);font-weight:700;margin-top:4px;word-break:break-all;cursor:pointer;padding:3px 4px;border-radius:4px;line-height:1.3}
+.art-gallery .ag-n:hover{background:#fff0f4}
+.art-gallery .ag-n input{font:inherit;font-size:11px;padding:2px 4px;width:100%}
+.art-gallery .ag-x{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--rose);color:#fff;border:0;cursor:pointer;font-size:11px;line-height:20px;padding:0;z-index:2}
+.art-gallery .ag-x:hover{background:#b9657c}
+.art-gallery .ag-acts{display:flex;gap:4px;margin-top:5px}
+.art-gallery .ag-acts .btn{font-size:10px;padding:3px 4px;flex:1;text-align:center}
+/* 响应式：缩放不崩坏 */
+body{overflow-x:hidden}
+@media(max-width:600px){
+  .lib-head{padding:16px 12px 8px}
+  .lib-head b{font-size:24px}
+  .lib-body{padding:4px 10px 20px}
+  #lib .tabs{width:auto;gap:6px;margin:2px 0 12px}
+  #lib .tab{padding:6px 13px;font-size:12px}
+  .wrap{padding:8px}
+  .row,.row3{grid-template-columns:1fr}
+  .art-gallery{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+}
+@media(max-width:380px){
+  header h1{font-size:34px}
+  .lib-head b{font-size:21px}
+  .art-gallery{grid-template-columns:repeat(auto-fill,minmax(68px,1fr))}
+  .btn.sm{padding:4px 8px}
+}
+@media(max-height:480px) and (orientation:landscape){
+  .lib-head{padding:12px 12px 6px}
+  .lib-head b{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -334,6 +369,9 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
       <textarea id="artistText" rows="3" placeholder="如 by xxx, style of yyy, masterpiece, ..."></textarea>
       <div class="hint" style="margin-top:6px">「复制」写入剪贴板，可粘到任何地方；「插入」追加到本页正向提示词。</div>
       <div id="artistList" style="margin-top:10px"></div>
+      <div class="ag-sec">🖼 图集 · 上传图片，可随时点击改名</div>
+      <div class="drop" id="artGalleryDrop">点击或拖拽上传图片（可多张，存本机）</div>
+      <div id="artGallery" class="art-gallery" style="margin-top:10px"></div>
     </div>
     <div class="pane" id="libRef">
       <div class="drop" id="refDrop">点击或拖拽上传参考图（可多张，存本机）</div>
@@ -458,6 +496,36 @@ async function copyImage(src){
   }catch(e){const a=document.createElement('a');a.href=src;a.download='ref.png';a.click();toast('浏览器不支持复制图片，已改为下载')}
 }
 bindDrop('refDrop',async d=>{const s=await shrink(d,512);const l=loadRefs();l.push({name:'参考图'+(l.length+1),src:s});saveRefs(l);renderRefs();toast('已存入参考图库 ♡')},true);
+
+/* ---------- artist gallery (画师串里的图集) ---------- */
+const GAL_KEY='ovoArtGallery';
+const loadGallery=()=>{try{return JSON.parse(localStorage.getItem(GAL_KEY)||'[]')}catch(e){return[]}};
+const saveGallery=l=>localStorage.setItem(GAL_KEY,JSON.stringify(l));
+function renderGallery(){
+  const box=$('artGallery');box.innerHTML='';
+  const list=loadGallery();
+  if(!list.length){box.innerHTML='<div class="lib-empty">还没有图集图片 ♡<br>上传后可命名、随时改名<br>也能复制或用作生图参考</div>';return;}
+  list.forEach((g,i)=>{
+    const d=document.createElement('div');d.className='ag';
+    d.innerHTML=`<button class="ag-x" data-del title="删除">✕</button>
+      <img src="${g.src}" alt="${esc(g.name)}">
+      <div class="ag-n" data-name title="点击改名">${esc(g.name)}</div>
+      <div class="ag-acts"><button class="btn sm" data-copy>复制</button><button class="btn sm" data-use>参考</button></div>`;
+    d.querySelector('[data-del]').onclick=()=>{const l=loadGallery();l.splice(i,1);saveGallery(l);renderGallery()};
+    d.querySelector('[data-copy]').onclick=()=>copyImage(g.src);
+    d.querySelector('[data-use]').onclick=()=>{vibes.push({src:g.src,s:.6,ie:1});renderImgs();toast('已加入参考图')};
+    const nameEl=d.querySelector('[data-name]');
+    nameEl.onclick=()=>{
+      const inp=document.createElement('input');inp.value=g.name;
+      nameEl.replaceWith(inp);inp.focus();inp.select();
+      const commit=()=>{const v=inp.value.trim()||g.name;const l=loadGallery();l[i].name=v;saveGallery(l);renderGallery()};
+      inp.onblur=commit;
+      inp.onkeydown=e=>{if(e.key==='Enter'){inp.blur()}else if(e.key==='Escape'){renderGallery()}};
+    };
+    box.appendChild(d);
+  });
+}
+bindDrop('artGalleryDrop',async d=>{const s=await shrink(d,512);const l=loadGallery();l.push({name:'图集'+(l.length+1),src:s});saveGallery(l);renderGallery();toast('已加入图集 ♡')},true);
 
 /* ---------- floating library (素材库) ---------- */
 function closeLib(){$('lib').classList.remove('on');$('libMask').classList.remove('on');$('fab').style.opacity='';$('fab').style.pointerEvents=''}
@@ -658,7 +726,7 @@ $('infoApply').onclick=()=>{const c=infoData?.parsed;if(!c)return toast('没有�
   const cc=c.v4_prompt?.caption?.char_captions;if(cc?.length){chars=cc.map((x,i)=>({p:x.char_caption,n:c.v4_negative_prompt?.caption?.char_captions?.[i]?.char_caption||'',x:x.centers?.[0]?.x??.5,y:x.centers?.[0]?.y??.5}));renderChars()}
   document.querySelector('[data-v=viewGen]').click();toast('参数已套用（已关闭质量标签与反向预设以免重复）')};
 
-loadCfg();renderChars();renderImgs();renderArtists();renderRefs();
+loadCfg();renderChars();renderImgs();renderArtists();renderRefs();renderGallery();
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')$('gen').click()});
 </script>
 </body>
