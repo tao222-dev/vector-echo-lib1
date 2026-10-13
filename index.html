@@ -88,6 +88,17 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 #fab{position:fixed;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60;border:2px solid #fff;animation:fabpulse 2.6s ease-in-out infinite;transition:transform .18s,opacity .25s}
 #fab:hover{transform:scale(1.08) rotate(-6deg)}
 #fab:active{transform:scale(.96)}
+/* API settings modal */
+#apiBtn{position:fixed;top:14px;right:14px;z-index:58;padding:7px 16px;border-radius:20px;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;border:2px solid #fff;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 12px rgba(201,121,143,.35);transition:transform .15s}
+#apiBtn:hover{transform:translateY(-2px)}
+#apiMask{position:fixed;inset:0;background:rgba(90,60,70,.35);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;z-index:80}
+#apiMask.on{opacity:1;visibility:visible}
+#apiModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);width:min(560px,92vw);max-height:88dvh;overflow:auto;background:linear-gradient(180deg,#fffdfe,#fdf0f4);border:2.5px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.30);z-index:81;opacity:0;visibility:hidden;transition:opacity .22s,transform .22s,visibility .22s}
+#apiModal.on{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+.api-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px dashed var(--line)}
+.api-head b{font-size:17px;color:var(--rose)}
+.api-body{padding:14px 18px 20px}
+.api-body label{font-size:12px;color:var(--ink2)}
 @keyframes fabpulse{0%,100%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 0 rgba(231,155,178,.45)}50%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 12px rgba(231,155,178,0)}}
 /* 遮罩已移除：素材库改为浮动窗口，不再拦截主页面交互，可边用边开 */
 #lib{position:fixed;inset:0;z-index:71;display:flex;align-items:center;justify-content:center;background:transparent;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s;pointer-events:none}
@@ -170,36 +181,39 @@ body{overflow-x:hidden}
   <h1>OVO NovelAI</h1>
   <p>♡ ovo novelai 生图 · dreamy image studio ♡</p>
 </header>
+<button id="apiBtn" title="API 设置">API</button>
+
+<div id="apiMask"></div>
+<div id="apiModal">
+  <div class="api-head"><b>API 设置</b><button class="lib-x" id="apiClose">关闭</button></div>
+  <div class="api-body">
+    <label>接口地址 (Base URL)</label>
+    <input id="baseUrl" placeholder="https://example.com">
+    <label>sk 密钥</label>
+    <input id="apiKey" type="password" placeholder="sk-xxxxxxxx">
+    <div class="row">
+      <div><label>接口格式</label>
+        <select id="apiMode">
+          <option value="openai">OpenAI 图像 /v1/images/generations</option>
+          <option value="chat">OpenAI 对话 /v1/chat/completions</option>
+          <option value="nai">NovelAI 原生 /ai/generate-image</option>
+        </select></div>
+      <div><label>模型 <span class="val" id="mcount"></span></label>
+        <select id="model"><option value="nai-diffusion-4-5-full">nai-diffusion-4-5-full</option></select></div>
+    </div>
+    <div class="flex" style="margin-top:10px">
+      <button class="btn sm" id="refreshModels">刷新模型</button>
+      <button class="btn sm" id="saveCfg">保存设置</button>
+      <input id="customModel" placeholder="或手动输入模型名" style="flex:1">
+    </div>
+    <div class="hint" style="margin-top:10px">填写接口地址与密钥后，点「保存设置」或「刷新模型」即可。</div>
+  </div>
+</div>
 
 <div class="nav"><button class="btn navb on" data-v="viewGen">♡ 生图</button><button class="btn navb" data-v="viewInfo">✧ 图片解析工作台</button></div>
 <div class="wrap" id="viewGen">
 <!-- LEFT -->
 <div>
-  <div class="win">
-    <div class="bar">♡ api.settings<span class="dots"><i></i><i></i><i></i></span></div>
-    <div class="body">
-      <label>接口地址 (Base URL)</label>
-      <input id="baseUrl" placeholder="https://example.com">
-      <label>sk 密钥</label>
-      <input id="apiKey" type="password" placeholder="sk-xxxxxxxx">
-      <div class="row">
-        <div><label>接口格式</label>
-          <select id="apiMode">
-            <option value="openai">OpenAI 图像 /v1/images/generations</option>
-            <option value="chat">OpenAI 对话 /v1/chat/completions</option>
-            <option value="nai">NovelAI 原生 /ai/generate-image</option>
-          </select></div>
-        <div><label>模型 <span class="val" id="mcount"></span></label>
-          <select id="model"><option value="nai-diffusion-4-5-full">nai-diffusion-4-5-full</option></select></div>
-      </div>
-      <div class="flex" style="margin-top:8px">
-        <button class="btn sm" id="refreshModels">↻ 刷新模型</button>
-        <button class="btn sm" id="saveCfg">✓ 保存设置</button>
-        <input id="customModel" placeholder="或手动输入模型名" style="flex:1">
-      </div>
-    </div>
-  </div>
-
   <div class="win">
     <div class="bar">♡ prompt.txt<span class="dots"><i></i><i></i><i></i></span></div>
     <div class="body">
@@ -615,6 +629,12 @@ function resetLibWin(){const w=$('libWin');w.style.width='';w.style.height='';w.
 function openLib(){$('lib').classList.add('on');$('fab').style.opacity='0';$('fab').style.pointerEvents='none';resetLibWin()}
 function closeLib(){$('lib').classList.remove('on');$('fab').style.opacity='';$('fab').style.pointerEvents=''}
 $('fab').onclick=openLib;$('libClose').onclick=closeLib;
+
+/* API settings modal */
+$('apiBtn').onclick=()=>{$('apiMask').classList.add('on');$('apiModal').classList.add('on')};
+function closeApi(){$('apiMask').classList.remove('on');$('apiModal').classList.remove('on')}
+$('apiClose').onclick=closeApi;$('apiMask').onclick=closeApi;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeApi()});
 document.querySelectorAll('#lib .tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('#lib .tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelectorAll('#lib .pane').forEach(p=>p.classList.remove('on'));$(t.dataset.l).classList.add('on')});
 
 /* 自定义窗口缩放 + 拖动（支持鼠标+触摸） */
