@@ -89,16 +89,16 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 #fab:hover{transform:scale(1.08) rotate(-6deg)}
 #fab:active{transform:scale(.96)}
 @keyframes fabpulse{0%,100%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 0 rgba(231,155,178,.45)}50%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 12px rgba(231,155,178,0)}}
-#libMask{position:fixed;inset:0;background:rgba(90,60,70,.30);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;z-index:70}
-#libMask.on{opacity:1;visibility:visible}
+/* 遮罩已移除：素材库改为浮动窗口，不再拦截主页面交互，可边用边开 */
 #lib{position:fixed;inset:0;z-index:71;display:flex;align-items:center;justify-content:center;background:transparent;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s;pointer-events:none}
-#lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible;pointer-events:auto}
-.lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86vh);min-width:300px;min-height:260px;max-width:98vw;max-height:96vh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:1px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.28);display:flex;flex-direction:column;align-items:center;overflow:hidden}
-.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box}
+#lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible}
+.lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86vh);min-width:300px;min-height:260px;max-width:98vw;max-height:96vh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:1px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.28);display:flex;flex-direction:column;align-items:center;overflow:hidden;pointer-events:auto}
+.lib-win.dragging{cursor:move;user-select:none}
+.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box;cursor:move;user-select:none}
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:5px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
-.lib-resize{position:absolute;right:4px;bottom:4px;width:32px;height:32px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:6px;background:rgba(255,255,255,.55);box-shadow:0 2px 6px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 36%,var(--rose) 36% 46%,transparent 46% 56%,var(--rose) 56% 66%,transparent 66% 76%,var(--rose) 76% 86%,transparent 86%)}
+.lib-resize{position:absolute;right:3px;bottom:3px;width:22px;height:22px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:5px;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 34%,var(--rose) 34% 44%,transparent 44% 56%,var(--rose) 56% 66%,transparent 66% 78%,var(--rose) 78% 88%,transparent 88%)}
 .lib-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
 .lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box}
 .lib-body::-webkit-scrollbar{width:8px}
@@ -362,7 +362,6 @@ body{overflow-x:hidden}
 <input type="file" id="fileIn" accept="image/*" hidden>
 
 <div id="fab" title="素材库（画师串 / 参考图 / 角色）">+</div>
-<div id="libMask"></div>
 <div id="lib">
   <div id="libWin" class="lib-win">
     <div class="lib-head"><b>素材库</b><button class="lib-x" id="libClose">关闭</button></div>
@@ -614,58 +613,41 @@ $('addCharLib').onclick=()=>{
 
 /* ---------- floating library (素材库) ---------- */
 function resetLibWin(){const w=$('libWin');w.style.width='';w.style.height='';w.style.top='';w.style.left='';w.style.right='';w.style.bottom='';w.style.transform='';w.style.margin=''}
-function openLib(){$('lib').classList.add('on');$('libMask').classList.add('on');$('fab').style.opacity='0';$('fab').style.pointerEvents='none';resetLibWin()}
-function closeLib(){$('lib').classList.remove('on');$('libMask').classList.remove('on');$('fab').style.opacity='';$('fab').style.pointerEvents=''}
-$('fab').onclick=openLib;$('libClose').onclick=closeLib;$('libMask').onclick=closeLib;
+function openLib(){$('lib').classList.add('on');$('fab').style.opacity='0';$('fab').style.pointerEvents='none';resetLibWin()}
+function closeLib(){$('lib').classList.remove('on');$('fab').style.opacity='';$('fab').style.pointerEvents=''}
+$('fab').onclick=openLib;$('libClose').onclick=closeLib;
 document.querySelectorAll('#lib .tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('#lib .tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelectorAll('#lib .pane').forEach(p=>p.classList.remove('on'));$(t.dataset.l).classList.add('on')});
 
-/* 自定义窗口缩放（支持鼠标+触摸） */
+/* 自定义窗口缩放 + 拖动（支持鼠标+触摸） */
 (function(){
-  const win=$('libWin'), handle=$('libResize');
-  let dragging=false, startX=0, startY=0, startW=0, startH=0;
+  const win=$('libWin'), handle=$('libResize'), head=win.querySelector('.lib-head');
+  const usePE=!!window.PointerEvent;
   function client(e){const t=e.touches&&e.touches[0];return {x:t?t.clientX:e.clientX,y:t?t.clientY:e.clientY}}
-  function start(e){
-    if(e.button && e.button!==0)return;
-    dragging=true;
+  function anchor(){ // 从居中切换为左上角像素定位
     const rect=win.getBoundingClientRect();
-    // 切换到左上角锚定，拖拽右下角时更直观
-    win.style.transform='none';
-    win.style.margin='0';
-    win.style.top=rect.top+'px';
-    win.style.left=rect.left+'px';
-    win.style.right='auto';
-    win.style.bottom='auto';
-    const c=client(e);
-    startX=c.x;startY=c.y;startW=rect.width;startH=rect.height;
-    e.preventDefault();
-    if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);
+    win.style.transform='none'; win.style.margin='0';
+    win.style.top=rect.top+'px'; win.style.left=rect.left+'px';
+    win.style.right='auto'; win.style.bottom='auto';
+    return rect;
   }
-  function move(e){
-    if(!dragging)return;
-    const c=client(e);
-    const dx=c.x-startX, dy=c.y-startY;
-    const vw=window.innerWidth, vh=window.innerHeight;
-    const minW=280, minH=240;
-    const w=Math.max(minW, Math.min(vw-16, startW+dx));
-    const h=Math.max(minH, Math.min(vh-16, startH+dy));
-    win.style.width=w+'px';
-    win.style.height=h+'px';
-    e.preventDefault();
-  }
-  function end(){dragging=false}
-  if(window.PointerEvent){
-    handle.addEventListener('pointerdown',start);
-    window.addEventListener('pointermove',move);
-    window.addEventListener('pointerup',end);
-    window.addEventListener('pointercancel',end);
+  /* 缩放 */
+  let rz=false, sx=0, sy=0, sw=0, sh=0;
+  function rzStart(e){ if(e.button&&e.button!==0)return; rz=true; const r=anchor(); const c=client(e); sx=c.x;sy=c.y;sw=r.width;sh=r.height; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
+  function rzMove(e){ if(!rz)return; const c=client(e); const dx=c.x-sx,dy=c.y-sy; const vw=innerWidth,vh=innerHeight,minW=280,minH=240; win.style.width=Math.max(minW,Math.min(vw-16,sw+dx))+'px'; win.style.height=Math.max(minH,Math.min(vh-16,sh+dy))+'px'; e.preventDefault();}
+  function rzEnd(){rz=false}
+  /* 拖动（标题栏） */
+  let mv=false, mx=0, my=0, ml=0, mt=0;
+  function mvStart(e){ if(e.target.closest('.lib-x'))return; if(e.button&&e.button!==0)return; const r=anchor(); const c=client(e); mx=c.x;my=c.y;ml=r.left;mt=r.top; mv=true; win.classList.add('dragging'); e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
+  function mvMove(e){ if(!mv)return; const c=client(e); let nx=ml+(c.x-mx), ny=mt+(c.y-my); const vw=innerWidth,vh=innerHeight,w=win.offsetWidth,h=win.offsetHeight; nx=Math.max(-w+48,Math.min(vw-48,nx)); ny=Math.max(0,Math.min(vh-48,ny)); win.style.left=nx+'px'; win.style.top=ny+'px'; e.preventDefault();}
+  function mvEnd(){mv=false; win.classList.remove('dragging')}
+  if(usePE){
+    handle.addEventListener('pointerdown',rzStart); window.addEventListener('pointermove',rzMove); window.addEventListener('pointerup',rzEnd); window.addEventListener('pointercancel',rzEnd);
+    head.addEventListener('pointerdown',mvStart); window.addEventListener('pointermove',mvMove); window.addEventListener('pointerup',mvEnd); window.addEventListener('pointercancel',mvEnd);
   }else{
-    handle.addEventListener('mousedown',start);
-    window.addEventListener('mousemove',move);
-    window.addEventListener('mouseup',end);
-    handle.addEventListener('touchstart',start,{passive:false});
-    window.addEventListener('touchmove',move,{passive:false});
-    window.addEventListener('touchend',end);
-    window.addEventListener('touchcancel',end);
+    handle.addEventListener('mousedown',rzStart); window.addEventListener('mousemove',rzMove); window.addEventListener('mouseup',rzEnd);
+    handle.addEventListener('touchstart',rzStart,{passive:false}); window.addEventListener('touchmove',rzMove,{passive:false}); window.addEventListener('touchend',rzEnd); window.addEventListener('touchcancel',rzEnd);
+    head.addEventListener('mousedown',mvStart); window.addEventListener('mousemove',mvMove); window.addEventListener('mouseup',mvEnd);
+    head.addEventListener('touchstart',mvStart,{passive:false}); window.addEventListener('touchmove',mvMove,{passive:false}); window.addEventListener('touchend',mvEnd); window.addEventListener('touchcancel',mvEnd);
   }
 })();
 
