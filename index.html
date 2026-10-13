@@ -91,14 +91,15 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 @keyframes fabpulse{0%,100%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 0 rgba(231,155,178,.45)}50%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 12px rgba(231,155,178,0)}}
 #libMask{position:fixed;inset:0;background:rgba(90,60,70,.30);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;z-index:70}
 #libMask.on{opacity:1;visibility:visible}
-#lib{position:fixed;top:2.5vh;left:2.5vw;width:95vw;height:95vh;max-width:97vw;max-height:97vh;min-width:340px;min-height:260px;resize:both;overflow:hidden;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);z-index:71;display:flex;flex-direction:column;align-items:center;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s}
-#lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible}
+#lib{position:fixed;inset:0;z-index:71;display:flex;align-items:center;justify-content:center;background:transparent;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s;pointer-events:none}
+#lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible;pointer-events:auto}
+.lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86vh);min-width:300px;min-height:260px;max-width:98vw;max-height:96vh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:1px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.28);display:flex;flex-direction:column;align-items:center;overflow:hidden}
 .lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box}
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:5px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
-.lib-resize{position:absolute;right:3px;bottom:3px;width:22px;height:22px;pointer-events:none;opacity:.7;background:linear-gradient(135deg,transparent 0 40%,var(--rose) 40% 48%,transparent 48% 56%,var(--rose) 56% 64%,transparent 64% 72%,var(--rose) 72% 80%,transparent 80%)}
-.lib-tip{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
+.lib-resize{position:absolute;right:4px;bottom:4px;width:32px;height:32px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:6px;background:rgba(255,255,255,.55);box-shadow:0 2px 6px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 36%,var(--rose) 36% 46%,transparent 46% 56%,var(--rose) 56% 66%,transparent 66% 76%,var(--rose) 76% 86%,transparent 86%)}
+.lib-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
 .lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box}
 .lib-body::-webkit-scrollbar{width:8px}
 .lib-body::-webkit-scrollbar-thumb{background:#f0cdd8;border-radius:8px}
@@ -142,6 +143,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 /* 响应式：缩放不崩坏 */
 body{overflow-x:hidden}
 @media(max-width:600px){
+  .lib-win{width:94vw;height:min(640px,84vh);border-radius:12px}
   .lib-head{padding:16px 12px 8px}
   .lib-head b{font-size:24px}
   .lib-body{padding:4px 10px 20px}
@@ -362,53 +364,55 @@ body{overflow-x:hidden}
 <div id="fab" title="素材库（画师串 / 参考图 / 角色）">+</div>
 <div id="libMask"></div>
 <div id="lib">
-  <div class="lib-head"><b>素材库</b><button class="lib-x" id="libClose">关闭</button></div>
-  <div class="tabs lib-seg" id="libTabs">
-    <div class="tab on" data-l="libArt">画师串</div>
-    <div class="tab" data-l="libRef">参考图</div>
-    <div class="tab" data-l="libChar">角色</div>
-  </div>
-  <div class="lib-body">
-    <div class="pane on" id="libArt">
-      <input id="artistFilter" placeholder="搜索画师串">
-      <div class="new-artist-card">
-        <div class="new-artist-title">新建画师串</div>
-        <input id="artistName" placeholder="名称（如 唯美风 / 某画师）">
-        <label style="margin-top:8px">画师串内容</label>
-        <textarea id="artistText" rows="3" placeholder="如 by xxx, style of yyy, masterpiece, ..."></textarea>
-        <div class="ag-sec">配图（可选，可多张）</div>
-        <div class="drop" id="artistImgsDrop">点击或拖拽上传图片</div>
-        <div id="artistImgsPreview" class="art-gallery mi-imgs"></div>
-        <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「插入」追加到本页正向提示词。</div>
-        <button class="btn sm" id="addArtist" style="margin-top:10px;width:100%">保存画师串</button>
-      </div>
-      <div id="artistList" style="margin-top:14px"></div>
+  <div id="libWin" class="lib-win">
+    <div class="lib-head"><b>素材库</b><button class="lib-x" id="libClose">关闭</button></div>
+    <div class="tabs lib-seg" id="libTabs">
+      <div class="tab on" data-l="libArt">画师串</div>
+      <div class="tab" data-l="libRef">参考图</div>
+      <div class="tab" data-l="libChar">角色</div>
     </div>
-    <div class="pane" id="libRef">
-      <div class="drop" id="refDrop">点击或拖拽上传参考图（可多张，存本机）</div>
-      <div class="hint" style="margin-top:6px">「复制图片」写入剪贴板；「用作参考图」载入到本页生图参考。</div>
-      <div id="refList" style="margin-top:10px"></div>
-    </div>
-    <div class="pane" id="libChar">
-      <div class="new-artist-card">
-        <div class="new-artist-title">新建角色</div>
-        <input id="charName" placeholder="角色名称（如 主角 / 某角色）">
-        <label style="margin-top:8px">角色正向提示词</label>
-        <textarea id="charPrompt" rows="3" placeholder="如 (character_name:1.0), silver hair, blue eyes, ..."></textarea>
-        <label style="margin-top:8px">角色反向提示词（可选）</label>
-        <textarea id="charNeg" rows="2" placeholder="如 extra limbs, bad anatomy, ..."></textarea>
-        <div class="row" style="margin-top:8px">
-          <div><label>X 位置 (0~1)</label><input id="charX" type="number" step="0.1" min="0" max="1" value="0.5"></div>
-          <div><label>Y 位置 (0~1)</label><input id="charY" type="number" step="0.1" min="0" max="1" value="0.5"></div>
+    <div class="lib-body">
+      <div class="pane on" id="libArt">
+        <input id="artistFilter" placeholder="搜索画师串">
+        <div class="new-artist-card">
+          <div class="new-artist-title">新建画师串</div>
+          <input id="artistName" placeholder="名称（如 唯美风 / 某画师）">
+          <label style="margin-top:8px">画师串内容</label>
+          <textarea id="artistText" rows="3" placeholder="如 by xxx, style of yyy, masterpiece, ..."></textarea>
+          <div class="ag-sec">配图（可选，可多张）</div>
+          <div class="drop" id="artistImgsDrop">点击或拖拽上传图片</div>
+          <div id="artistImgsPreview" class="art-gallery mi-imgs"></div>
+          <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「插入」追加到本页正向提示词。</div>
+          <button class="btn sm" id="addArtist" style="margin-top:10px;width:100%">保存画师串</button>
         </div>
-        <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「应用到角色区」载入本页左侧角色列表（最多6个）。</div>
-        <button class="btn sm" id="addCharLib" style="margin-top:10px;width:100%">保存角色</button>
+        <div id="artistList" style="margin-top:14px"></div>
       </div>
-      <div id="charList" style="margin-top:14px"></div>
+      <div class="pane" id="libRef">
+        <div class="drop" id="refDrop">点击或拖拽上传参考图（可多张，存本机）</div>
+        <div class="hint" style="margin-top:6px">「复制图片」写入剪贴板；「用作参考图」载入到本页生图参考。</div>
+        <div id="refList" style="margin-top:10px"></div>
+      </div>
+      <div class="pane" id="libChar">
+        <div class="new-artist-card">
+          <div class="new-artist-title">新建角色</div>
+          <input id="charName" placeholder="角色名称（如 主角 / 某角色）">
+          <label style="margin-top:8px">角色正向提示词</label>
+          <textarea id="charPrompt" rows="3" placeholder="如 (character_name:1.0), silver hair, blue eyes, ..."></textarea>
+          <label style="margin-top:8px">角色反向提示词（可选）</label>
+          <textarea id="charNeg" rows="2" placeholder="如 extra limbs, bad anatomy, ..."></textarea>
+          <div class="row" style="margin-top:8px">
+            <div><label>X 位置 (0~1)</label><input id="charX" type="number" step="0.1" min="0" max="1" value="0.5"></div>
+            <div><label>Y 位置 (0~1)</label><input id="charY" type="number" step="0.1" min="0" max="1" value="0.5"></div>
+          </div>
+          <div class="hint" style="margin-top:8px">「复制」写入剪贴板；「应用到角色区」载入本页左侧角色列表（最多6个）。</div>
+          <button class="btn sm" id="addCharLib" style="margin-top:10px;width:100%">保存角色</button>
+        </div>
+        <div id="charList" style="margin-top:14px"></div>
+      </div>
     </div>
+    <div class="lib-resize" id="libResize" title="拖动此处缩放窗口"></div>
+    <div class="lib-tip">拖动右下角可缩放</div>
   </div>
-  <div class="lib-resize" title="拖动此处缩放窗口"></div>
-  <div class="lib-tip">拖动右下角可缩放</div>
 </div>
 
 <script>
@@ -609,10 +613,61 @@ $('addCharLib').onclick=()=>{
 
 
 /* ---------- floating library (素材库) ---------- */
+function resetLibWin(){const w=$('libWin');w.style.width='';w.style.height='';w.style.top='';w.style.left='';w.style.right='';w.style.bottom='';w.style.transform='';w.style.margin=''}
+function openLib(){$('lib').classList.add('on');$('libMask').classList.add('on');$('fab').style.opacity='0';$('fab').style.pointerEvents='none';resetLibWin()}
 function closeLib(){$('lib').classList.remove('on');$('libMask').classList.remove('on');$('fab').style.opacity='';$('fab').style.pointerEvents=''}
-$('fab').onclick=()=>{$('lib').classList.add('on');$('libMask').classList.add('on');$('fab').style.opacity='0';$('fab').style.pointerEvents='none'};
-$('libClose').onclick=closeLib; $('libMask').onclick=closeLib;
+$('fab').onclick=openLib;$('libClose').onclick=closeLib;$('libMask').onclick=closeLib;
 document.querySelectorAll('#lib .tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('#lib .tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelectorAll('#lib .pane').forEach(p=>p.classList.remove('on'));$(t.dataset.l).classList.add('on')});
+
+/* 自定义窗口缩放（支持鼠标+触摸） */
+(function(){
+  const win=$('libWin'), handle=$('libResize');
+  let dragging=false, startX=0, startY=0, startW=0, startH=0;
+  function client(e){const t=e.touches&&e.touches[0];return {x:t?t.clientX:e.clientX,y:t?t.clientY:e.clientY}}
+  function start(e){
+    if(e.button && e.button!==0)return;
+    dragging=true;
+    const rect=win.getBoundingClientRect();
+    // 切换到左上角锚定，拖拽右下角时更直观
+    win.style.transform='none';
+    win.style.margin='0';
+    win.style.top=rect.top+'px';
+    win.style.left=rect.left+'px';
+    win.style.right='auto';
+    win.style.bottom='auto';
+    const c=client(e);
+    startX=c.x;startY=c.y;startW=rect.width;startH=rect.height;
+    e.preventDefault();
+    if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);
+  }
+  function move(e){
+    if(!dragging)return;
+    const c=client(e);
+    const dx=c.x-startX, dy=c.y-startY;
+    const vw=window.innerWidth, vh=window.innerHeight;
+    const minW=280, minH=240;
+    const w=Math.max(minW, Math.min(vw-16, startW+dx));
+    const h=Math.max(minH, Math.min(vh-16, startH+dy));
+    win.style.width=w+'px';
+    win.style.height=h+'px';
+    e.preventDefault();
+  }
+  function end(){dragging=false}
+  if(window.PointerEvent){
+    handle.addEventListener('pointerdown',start);
+    window.addEventListener('pointermove',move);
+    window.addEventListener('pointerup',end);
+    window.addEventListener('pointercancel',end);
+  }else{
+    handle.addEventListener('mousedown',start);
+    window.addEventListener('mousemove',move);
+    window.addEventListener('mouseup',end);
+    handle.addEventListener('touchstart',start,{passive:false});
+    window.addEventListener('touchmove',move,{passive:false});
+    window.addEventListener('touchend',end);
+    window.addEventListener('touchcancel',end);
+  }
+})();
 
 /* ---------- images ---------- */
 let i2i=null,mask=null,vibes=[],crefs=[];
