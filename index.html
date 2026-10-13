@@ -93,8 +93,8 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 #lib{position:fixed;inset:0;z-index:71;display:flex;align-items:center;justify-content:center;background:transparent;clip-path:circle(0px at calc(100% - 49px) calc(100% - 49px));opacity:0;visibility:hidden;transition:clip-path .42s cubic-bezier(.22,.9,.3,1),opacity .25s ease,visibility .42s;pointer-events:none}
 #lib.on{clip-path:circle(150vmax at calc(100% - 49px) calc(100% - 49px));opacity:1;visibility:visible}
 .lib-win{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(920px,92vw);height:min(780px,86vh);min-width:300px;min-height:260px;max-width:98vw;max-height:96vh;background:linear-gradient(180deg,#fffdfe 0%,#fdf0f4 55%,#fbe9ef 100%);border:1px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.28);display:flex;flex-direction:column;align-items:center;overflow:hidden;pointer-events:auto}
-.lib-win.dragging{cursor:move;user-select:none}
-.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box;cursor:move;user-select:none}
+.lib-win.dragging{cursor:move;user-select:none;touch-action:none}
+.lib-head{display:flex;align-items:center;justify-content:center;position:relative;padding:22px 18px 10px;width:min(94%,760px);box-sizing:border-box;cursor:move;user-select:none;touch-action:none}
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:5px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
