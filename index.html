@@ -89,7 +89,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 #fab:hover{transform:scale(1.08) rotate(-6deg)}
 #fab:active{transform:scale(.96)}
 /* API settings modal */
-#apiBtn{position:fixed;top:14px;right:14px;z-index:58;padding:7px 16px;border-radius:20px;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;border:2px solid #fff;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 12px rgba(201,121,143,.35);transition:transform .15s}
+#apiBtn{position:fixed;top:14px;right:14px;z-index:58;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;border:2px solid #fff;font-size:20px;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(201,121,143,.35);transition:transform .15s}
 #apiBtn:hover{transform:translateY(-2px)}
 #apiMask{position:fixed;inset:0;background:rgba(90,60,70,.35);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;z-index:80}
 #apiMask.on{opacity:1;visibility:visible}
@@ -181,7 +181,7 @@ body{overflow-x:hidden}
   <h1>OVO NovelAI</h1>
   <p>♡ ovo novelai 生图 · dreamy image studio ♡</p>
 </header>
-<button id="apiBtn" title="API 设置">API</button>
+<button id="apiBtn" title="API 设置" aria-label="API 设置">⚙</button>
 
 <div id="apiMask"></div>
 <div id="apiModal">
