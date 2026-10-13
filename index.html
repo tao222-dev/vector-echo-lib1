@@ -85,7 +85,7 @@ details summary{cursor:pointer;color:var(--rose);font-weight:700;font-size:13px;
 .kv b{color:var(--rose);font-weight:500}.kv div{word-break:break-all;white-space:pre-wrap}
 pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:10px;font-size:11px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-all}
 .sec{font-weight:700;color:var(--rose);margin:12px 0 6px;border-bottom:1px dashed var(--pink2);padding-bottom:3px}
-#fab{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60;border:2px solid #fff;animation:fabpulse 2.6s ease-in-out infinite;transition:transform .18s,opacity .25s}
+#fab{position:fixed;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:60;border:2px solid #fff;animation:fabpulse 2.6s ease-in-out infinite;transition:transform .18s,opacity .25s}
 #fab:hover{transform:scale(1.08) rotate(-6deg)}
 #fab:active{transform:scale(.96)}
 @keyframes fabpulse{0%,100%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 0 rgba(231,155,178,.45)}50%{box-shadow:0 8px 22px rgba(201,121,143,.45),0 0 0 12px rgba(231,155,178,0)}}
@@ -98,8 +98,7 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 .lib-head b{font-family:"Pinyon Script",cursive;font-size:30px;font-weight:700;background:linear-gradient(180deg,#e8a0b4,#c9798f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .lib-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:5px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--rose);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .lib-x:hover{background:var(--pink);color:#fff;border-color:var(--pink2)}
-.lib-resize{position:absolute;right:3px;bottom:3px;width:22px;height:22px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:5px;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 34%,var(--rose) 34% 44%,transparent 44% 56%,var(--rose) 56% 66%,transparent 66% 78%,var(--rose) 78% 88%,transparent 88%)}
-.lib-tip{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:11px;color:var(--ink2);opacity:.65;pointer-events:none;background:rgba(255,255,255,.75);padding:2px 12px;border-radius:10px;white-space:nowrap}
+.lib-resize{position:absolute;left:3px;top:3px;width:22px;height:22px;pointer-events:auto;cursor:nwse-resize;touch-action:none;z-index:5;border-radius:5px;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(201,121,143,.18);background-image:linear-gradient(135deg,transparent 0 34%,var(--rose) 34% 44%,transparent 44% 56%,var(--rose) 56% 66%,transparent 66% 78%,var(--rose) 78% 88%,transparent 88%)}
 .lib-body{padding:4px 16px 24px;overflow:auto;flex:1;min-height:0;width:min(94%,760px);max-width:100%;box-sizing:border-box;overscroll-behavior:contain}
 .lib-body::-webkit-scrollbar{width:8px}
 .lib-body::-webkit-scrollbar-thumb{background:#f0cdd8;border-radius:8px}
@@ -410,7 +409,6 @@ body{overflow-x:hidden}
       </div>
     </div>
     <div class="lib-resize" id="libResize" title="拖动此处缩放窗口"></div>
-    <div class="lib-tip">拖动右下角可缩放</div>
   </div>
 </div>
 
@@ -505,7 +503,7 @@ function renderArtists(){
   if(!list.length){box.innerHTML='<div class="lib-empty">'+(q?'没有匹配的画师串':'还没有保存的画师串<br>在上方「新建画师串」里添加吧')+'</div>';return;}
   list.forEach(([a,idx])=>{
     const d=document.createElement('div');d.className='mi';
-    const imgHtml = (a.imgs && a.imgs.length) ? `<div class="art-gallery mi-imgs">${a.imgs.map((src)=>`<div class="ag"><button class="ag-x" data-del-img title="删除">✕</button><img src="${src}" onerror="this.style.display='none'"><div class="ag-acts"><button class="btn sm" data-copy-img>复制</button><button class="btn sm" data-use-img>参考</button></div></div>`).join('')}</div>` : '';
+    const imgHtml = (a.imgs && a.imgs.length) ? `<div class="art-gallery mi-imgs">${a.imgs.map((src)=>`<div class="ag"><button class="ag-x" data-del-img title="删除">✕</button><img src="${src}" onerror="this.style.display='none'"></div>`).join('')}</div>` : '';
     d.innerHTML=`<div class="mi-top"><span class="mi-name" data-name title="点击改名">${esc(a.name)}</span><button class="x" data-del title="删除整条">✕</button></div>
       <div class="mi-text">${esc(a.text)}</div>
       ${imgHtml}
@@ -631,10 +629,10 @@ document.querySelectorAll('#lib .tab').forEach(t=>t.onclick=()=>{document.queryS
     win.style.right='auto'; win.style.bottom='auto';
     return rect;
   }
-  /* 缩放 */
-  let rz=false, sx=0, sy=0, sw=0, sh=0;
-  function rzStart(e){ if(e.button&&e.button!==0)return; rz=true; document.body.style.overflow='hidden'; const r=anchor(); const c=client(e); sx=c.x;sy=c.y;sw=r.width;sh=r.height; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
-  function rzMove(e){ if(!rz)return; const c=client(e); const dx=c.x-sx,dy=c.y-sy; const vw=innerWidth,vh=innerHeight,minW=280,minH=240; win.style.width=Math.max(minW,Math.min(vw-16,sw+dx))+'px'; win.style.height=Math.max(minH,Math.min(vh-16,sh+dy))+'px'; e.preventDefault();}
+  /* 缩放（手柄在左上，右下角固定） */
+  let rz=false, sx=0, sy=0, sw=0, sh=0, rx0=0, ry0=0;
+  function rzStart(e){ if(e.button&&e.button!==0)return; rz=true; document.body.style.overflow='hidden'; const r=anchor(); const c=client(e); sx=c.x;sy=c.y;sw=r.width;sh=r.height; rx0=r.right; ry0=r.bottom; e.preventDefault(); if(e.target.setPointerCapture)e.target.setPointerCapture(e.pointerId);}
+  function rzMove(e){ if(!rz)return; const c=client(e); const dx=c.x-sx,dy=c.y-sy; const vw=innerWidth,vh=innerHeight,minW=280,minH=240; const nw=Math.max(minW,Math.min(vw-16,sw-dx)); const nh=Math.max(minH,Math.min(vh-16,sh-dy)); win.style.width=nw+'px'; win.style.height=nh+'px'; win.style.left=(rx0-nw)+'px'; win.style.top=(ry0-nh)+'px'; e.preventDefault();}
   function rzEnd(){rz=false; document.body.style.overflow=''}
   /* 拖动（标题栏） */
   let mv=false, mx=0, my=0, ml=0, mt=0;
