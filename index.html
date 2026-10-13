@@ -89,8 +89,8 @@ pre.raw{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1
 #fab:hover{transform:scale(1.08) rotate(-6deg)}
 #fab:active{transform:scale(.96)}
 /* API settings modal */
-#apiBtn{position:fixed;top:14px;right:14px;z-index:58;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f7c9d6,#e79bb2);color:#fff;border:2px solid #fff;font-size:20px;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(201,121,143,.35);transition:transform .15s}
-#apiBtn:hover{transform:translateY(-2px)}
+#apiBtn{position:fixed;top:11px;right:11px;z-index:58;width:30px;height:30px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;line-height:1;cursor:pointer;filter:drop-shadow(0 1px 2px rgba(122,90,100,.6));transition:opacity .15s,transform .15s}
+#apiBtn:hover{opacity:.65}
 #apiMask{position:fixed;inset:0;background:rgba(90,60,70,.35);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;z-index:80}
 #apiMask.on{opacity:1;visibility:visible}
 #apiModal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);width:min(560px,92vw);max-height:88dvh;overflow:auto;background:linear-gradient(180deg,#fffdfe,#fdf0f4);border:2.5px solid var(--pink2);border-radius:14px;box-shadow:0 20px 60px rgba(122,90,100,.30);z-index:81;opacity:0;visibility:hidden;transition:opacity .22s,transform .22s,visibility .22s}
